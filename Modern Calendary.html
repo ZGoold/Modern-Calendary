@@ -1,0 +1,2329 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendario del Creador - ¡Planifica tu Contenido! 🚀</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* --- Google Calendar inspired CSS Variables (Base) --- */
+        :root {
+            --google-blue-500: #1a73e8;
+            --google-blue-100: #e8f0fe;
+            --google-gray-200: #f1f3f4;
+            --google-gray-300: #dadce0;
+            --google-gray-500: #70757a;
+            --google-gray-700: #3c4043;
+            --google-gray-900: #202124;
+            --color-white: #ffffff;
+
+            /* Default Original Theme (Light Mode) based on original file's root vars */
+            --color-primary: #FF6B6B; /* Rojo vibrante, pensando en YouTube */
+            --color-secondary: #4ECDC4; /* Turquesa complementario */
+            --color-accent: #FFD166; /* Amarillo para acentos */
+            --color-text-dark: #333;
+            --color-text-light: #f9f9f9;
+            --color-bg-light: #f5f7fa;
+            --color-bg-dark: #2c3e50; /* Used as --color-bg-app in this Google layout */
+            --color-card-bg: #ffffff; /* Used as --color-bg-surface */
+            --color-border: #e0e0e0; /* Used as --color-border-default */
+            --color-shadow: rgba(0, 0, 0, 0.1); /* Used as --color-shadow-light / --color-shadow-medium */
+
+            --font-main: 'Roboto', sans-serif; /* Google-style font for main interface */
+            --font-body: 'Open Sans', sans-serif; /* Original font for text within cells */
+            --font-heading: 'Montserrat', sans-serif; /* Original font for headings */
+            --font-size-base: 14px;
+
+            /* RGB for dynamic shadows (adapt to default primary) */
+            --color-primary-rgb: 255, 107, 107; /* RGB for #FF6B6B */
+        }
+
+        /* --- Theme Overrides (Light Mode) --- */
+        body.blue-theme:not(.dark-mode) {
+            --color-primary: #3498DB;
+            --color-secondary: #5DADE2;
+            --color-accent: #A9CCE3;
+            --color-text-dark: #2C3E50;
+            --color-text-light: #F8F9FA;
+            --color-bg-light: #EBF5FB;
+            --color-bg-dark: #BDC3C7;
+            --color-card-bg: #FFFFFF;
+            --color-border: #D4E6F1;
+            --color-shadow: rgba(0, 0, 0, 0.08);
+            --color-primary-rgb: 52, 152, 219;
+        }
+
+        body.green-theme:not(.dark-mode) {
+            --color-primary: #2ECC71;
+            --color-secondary: #58D68D;
+            --color-accent: #A3E4D7;
+            --color-text-dark: #196F3D;
+            --color-text-light: #F8F9FA;
+            --color-bg-light: #E8F8F5;
+            --color-bg-dark: #BBEADD;
+            --color-card-bg: #FFFFFF;
+            --color-border: #D1F2EB;
+            --color-shadow: rgba(0, 0, 0, 0.08);
+            --color-primary-rgb: 46, 204, 113;
+        }
+
+        /* --- Dark Mode Variables (Overlays on top of themes) --- */
+        body.dark-mode {
+            --color-primary: #FF9999; /* Red more suave for oscuro */
+            --color-secondary: #7ED6DF; /* Turquesa más claro para oscuro */
+            --color-accent: #FFE599; /* Amarillo más claro */
+            --color-text-dark: #e0e0e0; /* Texto claro en oscuro */
+            --color-text-light: #333; /* Texto oscuro en elementos claros si los hubiera */
+            --color-bg-light: #1a1a2e; /* Fondo general oscuro (used for day cells) */
+            --color-bg-dark: #16213e; /* Fondo de contenedores más oscuro */
+            --color-card-bg: #0f3460; /* Fondo de tarjetas oscuro (used for sidebar/modal) */
+            --color-border: #4a5d73;
+            --color-shadow: rgba(0, 0, 0, 0.3);
+            --color-primary-rgb: 255, 153, 153; /* RGB for #FF9999 */
+
+            /* Adapt specific Google-style elements to dark mode */
+            --google-gray-200: #292a2d; /* For background of specific components */
+            --google-gray-300: #3c4043; /* For borders/dividers */
+            --google-gray-500: #9aa0a6; /* For secondary text */
+            --google-gray-700: #e8eaed; /* For main text */
+            --color-bg-app: #202124; /* Overall app background */
+            --color-bg-surface: #303134; /* Cards, modals, sidebar background */
+            --color-border-default: #5f6368; /* General borders */
+            --color-shadow-light: rgba(0, 0, 0, 0.3);
+            --color-shadow-medium: rgba(0, 0, 0, 0.5);
+
+            /* Special overrides for day cell number background in dark mode */
+            --day-number-bg-dark: rgba(48, 49, 52, 0.8); /* Dark background for day number */
+            --day-number-bg-selected-dark: rgba(48, 49, 52, 0.9); /* Dark background for selected day number */
+        }
+
+        /* --- Dark Mode for Blue Theme --- */
+        body.blue-theme.dark-mode {
+            --color-primary: #85C1E9;
+            --color-secondary: #5499C7;
+            --color-accent: #2874A6;
+            --color-text-dark: #EAECEE;
+            --color-text-light: #2C3E50;
+            --color-bg-light: #212F3D;
+            --color-bg-dark: #1C2833;
+            --color-card-bg: #2C3E50;
+            --color-border: #34495E;
+            --color-shadow: rgba(0, 0, 0, 0.4);
+            --color-primary-rgb: 133, 193, 233;
+
+            /* Also update generic Google-style elements for this theme's dark mode */
+            --google-blue-100: #2c3447; /* Primary light for this dark mode theme */
+            --color-bg-app: #212F3D;
+            --color-bg-surface: #2C3E50;
+            --color-border-default: #34495E;
+
+            --day-number-bg-dark: rgba(44, 62, 80, 0.8);
+            --day-number-bg-selected-dark: rgba(44, 62, 80, 0.9);
+        }
+
+        /* --- Dark Mode for Green Theme --- */
+        body.green-theme.dark-mode {
+            --color-primary: #76D7C4;
+            --color-secondary: #45B39D;
+            --color-accent: #1E8449;
+            --color-text-dark: #EAECEE;
+            --color-text-light: #196F3D;
+            --color-bg-light: #1A5276;
+            --color-bg-dark: #154360;
+            --color-card-bg: #1F618D;
+            --color-border: #2980B9;
+            --color-shadow: rgba(0, 0, 0, 0.4);
+            --color-primary-rgb: 118, 215, 196;
+
+            /* Also update generic Google-style elements for this theme's dark mode */
+            --google-blue-100: #1A5276; /* Primary light for this dark mode theme */
+            --color-bg-app: #1A5276;
+            --color-bg-surface: #1F618D;
+            --color-border-default: #2980B9;
+
+            --day-number-bg-dark: rgba(31, 97, 141, 0.8);
+            --day-number-bg-selected-dark: rgba(31, 97, 141, 0.9);
+        }
+
+
+        /* --- Global Reset & Base Styles --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-main); /* Primary font for Google-style elements */
+            font-size: var(--font-size-base);
+            color: var(--google-gray-700); /* Use google-style main text color */
+            background-color: var(--google-gray-200); /* Use google-style app background */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Prevent body scroll, main content will scroll */
+        }
+        body.dark-mode {
+            color: var(--color-text-main); /* Text color from dark mode vars */
+            background-color: var(--color-bg-app); /* Background from dark mode vars */
+        }
+
+
+        /* --- General Button & Select Styling (Google Style) --- */
+        button, select {
+            font-family: var(--font-main);
+            cursor: pointer;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+            border: none; /* Ensure no default browser border */
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: var(--font-size-base);
+            font-weight: 500;
+        }
+
+        button:hover, select:hover {
+            filter: brightness(0.95);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        body.dark-mode button:hover, body.dark-mode select:hover {
+            filter: brightness(1.1); /* Slightly brighter on hover in dark mode */
+        }
+
+        /* --- App Container (Main Layout - Flexbox) --- */
+        .app-container {
+            display: flex;
+            flex-grow: 1;
+            width: 100%;
+            height: 100vh; /* Occupy full viewport height */
+        }
+
+        /* --- Left Sidebar --- */
+        .left-sidebar {
+            flex-shrink: 0;
+            width: 280px; /* Standard sidebar width */
+            background-color: var(--color-bg-surface); /* Uses Google-style surface var */
+            border-right: 1px solid var(--color-border-default); /* Uses Google-style border var */
+            padding: 20px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            overflow-y: auto;
+            padding-bottom: 40px;
+        }
+
+        .create-button {
+            background-color: var(--color-white);
+            color: var(--google-gray-700);
+            border: 1px solid var(--color-border-default);
+            border-radius: 24px;
+            padding: 12px 24px;
+            font-size: 1.05em;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 1px 2px 0 var(--color-shadow-light), 0 1px 3px 1px var(--color-shadow-light);
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+            max-width: 170px;
+            margin-bottom: 15px;
+        }
+
+        .create-button:hover {
+            background-color: var(--google-gray-200);
+            box-shadow: 0 1px 3px 0 var(--color-shadow-medium), 0 1px 5px 1px var(--color-shadow-medium);
+        }
+
+        body.dark-mode .create-button {
+            background-color: #3C4043; /* Darker background for dark mode button */
+            color: var(--color-text-main);
+            border-color: #3C4043;
+            box-shadow: none;
+        }
+        body.dark-mode .create-button:hover {
+            background-color: #5f6368;
+        }
+
+        /* --- Mini Calendar in Sidebar --- */
+        .mini-calendar {
+            padding: 10px;
+            border-bottom: 1px solid var(--color-border-default);
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        .mini-calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            color: var(--color-text-main); /* Uses main text color from global vars */
+        }
+
+        .mini-calendar-header h4 {
+            font-size: 1em;
+            font-weight: 500;
+        }
+
+        .mini-calendar-nav button {
+            background: none;
+            border: none;
+            font-size: 1.2em;
+            color: var(--color-text-secondary); /* Uses secondary text color */
+            padding: 5px;
+            border-radius: 50%;
+        }
+
+        .mini-calendar-nav button:hover {
+            background-color: var(--google-gray-200);
+        }
+
+        body.dark-mode .mini-calendar-nav button:hover {
+            background-color: #5f6368;
+        }
+
+        .mini-calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            font-size: 0.85em;
+            text-align: center;
+        }
+
+        .mini-calendar-grid .day-name {
+            color: var(--color-text-secondary);
+            font-weight: 500;
+            padding-bottom: 5px;
+        }
+
+        .mini-calendar-grid .mini-day-cell {
+            padding: 5px 0;
+            border-radius: 50%;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+            color: var(--color-text-main);
+        }
+
+        .mini-calendar-grid .mini-day-cell:hover {
+            background-color: var(--google-gray-200);
+        }
+
+        body.dark-mode .mini-calendar-grid .mini-day-cell:hover {
+            background-color: #5f6368;
+        }
+
+        .mini-calendar-grid .mini-day-cell.other-month {
+            color: var(--color-text-secondary);
+            opacity: 0.6;
+            cursor: default;
+        }
+
+        .mini-calendar-grid .mini-day-cell.selected-day {
+            background-color: var(--color-primary); /* Uses main primary color */
+            color: var(--color-white);
+            font-weight: 500;
+        }
+        .mini-calendar-grid .mini-day-cell.selected-day:hover {
+            background-color: var(--color-primary);
+        }
+        body.dark-mode .mini-calendar-grid .mini-day-cell.selected-day {
+            background-color: var(--color-primary);
+        }
+
+
+        .sidebar-options-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid var(--color-border-default);
+        }
+
+        .sidebar-options-section label {
+            font-weight: 500;
+            color: var(--color-text-main);
+        }
+
+        .sidebar-options-section select,
+        .sidebar-options-section button {
+            background-color: var(--color-bg-surface);
+            color: var(--color-text-main);
+            border: 1px solid var(--color-border-default);
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+        .sidebar-options-section select:hover,
+        .sidebar-options-section button:hover {
+            background-color: var(--google-gray-200);
+            border-color: var(--google-gray-500);
+        }
+        body.dark-mode .sidebar-options-section select,
+        body.dark-mode .sidebar-options-section button {
+            background-color: #3C4043;
+            border-color: #5f6368;
+            color: var(--color-text-main);
+        }
+        body.dark-mode .sidebar-options-section select:hover,
+        body.dark-mode .sidebar-options-section button:hover {
+            background-color: #5f6368;
+        }
+        /* Specific reset button style */
+        #resetDatesBtn {
+            background-color: #EA4335; /* Google Red */
+            color: white;
+            border: none;
+        }
+        #resetDatesBtn:hover {
+            background-color: #D93025;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        body.dark-mode #resetDatesBtn {
+            background-color: #EA4335;
+            color: white;
+        }
+        body.dark-mode #resetDatesBtn:hover {
+            background-color: #D93025;
+        }
+
+
+        /* --- Main Content Area --- */
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Main Header for Calendar View --- */
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--color-border-default);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .main-header .title-nav-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .main-header .nav-buttons button {
+            background: none;
+            border: 1px solid var(--color-border-default);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--google-gray-700);
+            font-size: 1.2em;
+        }
+
+        .main-header .nav-buttons button:hover {
+            background-color: var(--google-gray-200);
+            border-color: var(--google-gray-500);
+        }
+        body.dark-mode .main-header .nav-buttons button {
+            background-color: #3C4043;
+            border-color: #5f6368;
+            color: #e8eaed;
+        }
+        body.dark-mode .main-header .nav-buttons button:hover {
+            background-color: #5f6368;
+            border-color: #8ab4f8;
+        }
+
+        .current-display-date {
+            font-size: 1.8em;
+            font-weight: 400;
+            color: var(--color-text-main);
+        }
+
+        .view-mode-buttons button {
+            background-color: var(--color-bg-surface);
+            color: var(--color-text-main);
+            border: 1px solid var(--color-border-default);
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 0.95em;
+        }
+
+        .view-mode-buttons button:hover {
+            background-color: var(--google-gray-200);
+        }
+
+        .view-mode-buttons button.active {
+            background-color: var(--google-blue-100);
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+            font-weight: 500;
+        }
+        body.dark-mode .view-mode-buttons button {
+            background-color: #3C4043;
+            border-color: #5f6368;
+            color: var(--color-text-main);
+        }
+        body.dark-mode .view-mode-buttons button:hover {
+            background-color: #5f6368;
+        }
+        body.dark-mode .view-mode-buttons button.active {
+            background-color: var(--color-primary-light);
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+
+
+        /* --- Weekdays Header --- */
+        .weekdays-header {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(150px, 1fr)); /* Match main-calendar-grid columns */
+            text-align: center;
+            font-weight: 500;
+            color: var(--color-text-secondary);
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--color-border-default);
+            margin-bottom: 10px;
+        }
+
+        /* --- Main Calendar Grid --- */
+        .main-calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(150px, 1fr)); /* Allows horizontal scrolling if content too wide */
+            gap: 5px; /* Increased gap for more separation */
+            background-color: var(--color-border-default); /* Grid lines color */
+            border: 1px solid var(--color-border-default);
+            border-radius: 8px;
+            overflow-x: hidden; /* Prevent horizontal scrolling if not needed, use for horizontal scrolling if needed */
+            overflow-y: auto; /* Enable vertical scrolling */
+            flex-grow: 1;
+            grid-auto-rows: 1fr; /* Rows will take equal height */
+            height: calc(100vh - 180px); /* Adjust based on header/other elements above the grid */
+            min-height: 400px; /* Fallback min-height for the grid itself */
+        }
+
+        /* --- Day Cell Styles (Restored from Original File + Dark Mode Adaptations) --- */
+        .day-cell {
+            background-color: var(--color-bg-light); /* Uses original light background var */
+            border-radius: 10px; /* Original rounded corners */
+            padding: 15px; /* Original padding */
+            min-height: 140px; /* Original fixed min-height */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            overflow: hidden; /* Hide content overflow for overall cell, day-content-wrapper handles internal scroll */
+            border: 1px solid var(--color-border); /* Uses original border var */
+            text-decoration: none;
+            box-shadow: 0 10px 30px var(--color-shadow); /* Original prominent shadow */
+            flex-shrink: 0; /* Ensure cells don't shrink horizontally below minmax */
+        }
+
+        .day-cell.droppable {
+            border: 2px dashed var(--color-primary); /* Uses main primary */
+            box-shadow: 0 0 10px var(--color-primary);
+        }
+
+        .day-cell:hover {
+            transform: translateY(-5px); /* Original aggressive lift */
+            box-shadow: 0 8px 15px var(--color-shadow); /* Original prominent hover shadow */
+        }
+
+        .day-cell.today {
+            border: 2px solid var(--color-primary); /* Uses main primary */
+            box-shadow: 0 0 15px rgba(var(--color-primary-rgb),0.4); /* Uses specific RGB var */
+        }
+        body.dark-mode .day-cell.today {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 15px rgba(var(--color-primary-rgb),0.4); /* Uses specific RGB var for dark mode */
+        }
+
+
+        .day-number-wrapper { /* Keep this internal structure */
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 5px;
+        }
+
+        .day-number {
+            font-family: var(--font-heading); /* Original font for number */
+            font-size: 1.5em;
+            font-weight: 700;
+            color: var(--color-primary); /* Original primary color for number */
+            background-color: rgba(255, 255, 255, 0.8); /* Original translucent white background */
+            padding: 2px 8px;
+            border-radius: 5px;
+            z-index: 2;
+            transition: color 0.3s ease, background-color 0.3s ease;
+        }
+        body.dark-mode .day-number {
+            background-color: var(--day-number-bg-dark); /* Dark mode specific translucent background */
+            color: var(--color-primary);
+        }
+
+        /* The "hook" that changes color (original style) */
+        .day-cell::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px; /* Original hook height */
+            background-color: var(--color-bg-light); /* Original default hook background */
+            border-radius: 10px 10px 0 0;
+            z-index: 1;
+            transition: background-color 0.3s ease;
+        }
+
+        .day-cell[data-color]::before {
+            background-color: var(--data-color-value); /* Hook takes data-color */
+        }
+
+        /* When the day has a hook color and the day text needs to adapt */
+        .day-cell[data-color] .day-number {
+             background-color: rgba(255, 255, 255, 0.9); /* Original behavior */
+        }
+        body.dark-mode .day-cell[data-color] .day-number {
+             background-color: var(--day-number-bg-selected-dark); /* Dark mode specific translucent background */
+        }
+
+
+        .day-content-wrapper {
+            flex-grow: 1;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            position: relative;
+            z-index: 1;
+            padding-top: 5px;
+            overflow-y: auto; /* Allows scrolling for many events WITHIN THE CELL */
+            scrollbar-width: thin;
+            scrollbar-color: var(--color-border) var(--color-bg-light); /* Uses original color vars */
+        }
+        /* Webkit scrollbar styles */
+        .day-content-wrapper::-webkit-scrollbar {
+            width: 6px;
+        }
+        .day-content-wrapper::-webkit-scrollbar-track {
+            background: var(--color-bg-light);
+            border-radius: 10px;
+        }
+        .day-content-wrapper::-webkit-scrollbar-thumb {
+            background-color: var(--color-border);
+            border-radius: 10px;
+            border: 1px solid var(--color-bg-light);
+        }
+        body.dark-mode .day-content-wrapper::-webkit-scrollbar-track {
+            background: var(--color-bg-light);
+        }
+        body.dark-mode .day-content-wrapper::-webkit-scrollbar-thumb {
+            background-color: var(--color-border);
+        }
+
+
+        .day-image {
+            width: 100%;
+            height: 80px; /* Original image height */
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .day-event-text {
+            font-size: 0.9em;
+            color: var(--color-text-dark); /* Original text color for event */
+            padding: 5px 8px;
+            border-radius: 5px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap; /* Event text on cell is nowrap */
+            background-color: var(--color-accent); /* Original accent color */
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            flex-shrink: 0;
+        }
+        body.dark-mode .day-event-text {
+            background-color: var(--color-accent); /* Keep accent color for dark mode */
+            color: var(--color-text-dark); /* Keep dark text for dark mode */
+        }
+        .day-event-text span {
+             white-space: nowrap;
+             overflow: hidden;
+             text-overflow: ellipsis;
+        }
+
+        .empty-day {
+            background-color: #f0f0f0; /* Original specific grey for empty */
+            cursor: default;
+            opacity: 0.6;
+            box-shadow: none;
+            transform: none;
+        }
+        body.dark-mode .empty-day {
+            background-color: #292a2d; /* Dark mode grey for empty */
+        }
+
+        .empty-day:hover {
+            transform: none;
+            box-shadow: none;
+        }
+        .empty-day::before {
+            background-color: #e0e0e0 !important; /* Original specific grey for empty hook */
+        }
+        body.dark-mode .empty-day::before {
+            background-color: #5f6368 !important; /* Dark mode grey for empty hook */
+        }
+
+        .day-cell-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px;
+            margin-top: 5px;
+        }
+        .day-cell-tag-pill {
+            background-color: var(--color-secondary); /* Original secondary color for tags on cell */
+            color: var(--color-text-light); /* Original text color for tags */
+            font-size: 0.7em;
+            padding: 3px 6px;
+            border-radius: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+        }
+        body.dark-mode .day-cell-tag-pill {
+            background-color: var(--color-secondary);
+            color: var(--color-text-light);
+        }
+
+
+        /* --- Modal to Add/Edit Details (simplified and fixed display) --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease-out;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background-color: var(--color-bg-surface);
+            padding: 24px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 4px 12px var(--color-shadow-medium);
+            position: relative;
+            animation: slideIn 0.3s ease-out;
+            border-top: 4px solid var(--color-primary);
+            /* Ensure modal content is scrollable if too tall */
+            max-height: 90vh; /* Limit modal height to 90% of viewport */
+            overflow-y: auto; /* Add scrollbar if content overflows */
+            display: flex; /* Use flexbox for internal layout */
+            flex-direction: column; /* Stack children vertically */
+        }
+        /* Scrollbar for modal content */
+        .modal-content::-webkit-scrollbar {
+            width: 8px;
+        }
+        .modal-content::-webkit-scrollbar-track {
+            background: var(--color-bg-app);
+            border-radius: 10px;
+        }
+        .modal-content::-webkit-scrollbar-thumb {
+            background-color: var(--color-border-default);
+            border-radius: 10px;
+            border: 2px solid var(--color-bg-app);
+        }
+        body.dark-mode .modal-content::-webkit-scrollbar-track {
+            background: #202124;
+        }
+        body.dark-mode .modal-content::-webkit-scrollbar-thumb {
+            background-color: #5f6368;
+            border: 2px solid #202124;
+        }
+
+        .close-button {
+            color: var(--color-text-secondary);
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        .close-button:hover {
+            color: var(--color-text-main);
+        }
+
+        .modal-content h3 {
+            font-size: 1.8em;
+            color: var(--color-text-main);
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--color-border-default);
+            padding-bottom: 10px;
+            flex-shrink: 0;
+        }
+        .modal-content .sub-title {
+            font-size: 0.95em;
+            color: var(--color-text-secondary);
+            margin-bottom: 20px;
+            flex-shrink: 0;
+        }
+
+        .modal-section-title {
+            font-size: 1.2em;
+            color: var(--color-text-main);
+            margin-top: 25px;
+            margin-bottom: 10px;
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+
+        .modal-content label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: var(--color-text-main);
+            font-size: 0.95em;
+        }
+
+        .modal-content input[type="text"],
+        .modal-content input[type="color"],
+        .modal-content input[type="file"],
+        .modal-content textarea {
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 15px;
+            border: 1px solid var(--color-border-default);
+            border-radius: 6px;
+            font-family: var(--font-main);
+            font-size: var(--font-size-base);
+            background-color: var(--color-bg-app); /* Use Google-style app bg for inputs */
+            color: var(--color-text-main);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .modal-content input:focus,
+        .modal-content textarea:focus {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 2px rgba(var(--color-primary-rgb), 0.2); /* Use correct RGB var */
+            outline: none;
+        }
+        body.dark-mode .modal-content input,
+        body.dark-mode .modal-content textarea {
+            background-color: #3C4043;
+            border-color: #5f6368;
+            color: var(--color-text-main);
+        }
+
+        .modal-content textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        /* Color Palette for Event in Modal */
+        .color-palette {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            flex-shrink: 0;
+        }
+        .color-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+        .color-option:hover {
+            transform: scale(1.08);
+        }
+        .color-option.selected {
+            border-color: var(--color-text-main);
+            transform: scale(1.15);
+        }
+        body.dark-mode .color-option.selected {
+            border-color: var(--color-primary);
+        }
+        .color-palette input[type="color"] {
+            width: 40px;
+            height: 30px;
+            padding: 0;
+            border-radius: 4px;
+            cursor: pointer;
+            border: 1px solid var(--color-border-default);
+            margin-bottom: 0;
+        }
+
+        /* Image preview */
+        #currentImagePreview {
+            border: 1px dashed var(--color-border-default);
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+            background-color: var(--color-bg-app);
+            flex-shrink: 0;
+        }
+        #currentImagePreview img {
+            max-width: 120px;
+            max-height: 80px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+        #currentImagePreview button {
+            background-color: #EA4335 !important;
+            color: white !important;
+            border: none !important;
+            padding: 6px 12px !important;
+            border-radius: 4px !important;
+            font-size: 0.85em !important;
+            cursor: pointer;
+            margin-top: 0 !important;
+        }
+        #currentImagePreview button:hover {
+            background-color: #D93025 !important;
+        }
+
+        /* Tag Management and Selection */
+        .tag-management-section, .day-tags-selection {
+            padding-top: 15px;
+            border-top: 1px solid var(--color-border-default);
+            margin-top: 20px;
+            flex-shrink: 0;
+        }
+        .tag-management-section h4, .day-tags-selection h4 {
+            font-size: 1em;
+            font-weight: 500;
+            color: var(--color-text-main);
+            margin-bottom: 10px;
+        }
+        .tag-input-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        .tag-input-group input {
+            margin-bottom: 0;
+        }
+        .tag-input-group button {
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9em;
+        }
+        .tag-input-group button:hover {
+            background-color: #1558b3;
+        }
+
+        .existing-tags-list, .tag-checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 15px;
+        }
+        .tag-pill {
+            background-color: var(--google-gray-200); /* Use google-style grey for management pills */
+            color: var(--color-text-main);
+            padding: 4px 10px;
+            border-radius: 16px;
+            font-size: 0.8em;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            cursor: default;
+        }
+        body.dark-mode .tag-pill {
+            background-color: #3C4043;
+            color: var(--color-text-main);
+        }
+        .tag-pill .delete-tag {
+            background: none;
+            border: none;
+            color: var(--color-text-secondary);
+            font-size: 0.9em;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 0 2px;
+            line-height: 1;
+        }
+        .tag-pill .delete-tag:hover {
+            color: #EA4335;
+        }
+
+        .tag-checkbox-group label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background-color: var(--google-gray-200); /* Use google-style grey for checkbox labels */
+            border: 1px solid var(--color-border-default);
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 0.8em;
+        }
+        body.dark-mode .tag-checkbox-group label {
+            background-color: #3C4043;
+            border-color: #5f6368;
+            color: var(--color-text-main);
+        }
+        .tag-checkbox-group input[type="checkbox"] {
+            margin: 0;
+            width: 16px;
+            height: 16px;
+            accent-color: var(--color-primary);
+        }
+        .tag-checkbox-group label:has(input[type="checkbox']:checked) {
+            background-color: var(--google-blue-100); /* Use google-style light blue for selected checkboxes */
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+        body.dark-mode .tag-checkbox-group label:has(input[type="checkbox']:checked) {
+            background-color: var(--color-primary-light);
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        /* Displaying tags on day cells (original style) */
+        .day-cell-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px;
+            margin-top: 5px;
+        }
+        .day-cell-tag-pill {
+            background-color: var(--color-secondary); /* Original secondary color for tags on cell */
+            color: var(--color-text-light); /* Original text color for tags */
+            font-size: 0.7em;
+            padding: 3px 6px;
+            border-radius: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+        }
+        body.dark-mode .day-cell-tag-pill {
+            background-color: var(--color-secondary);
+            color: var(--color-text-light);
+        }
+
+
+        /* Modal Save Button */
+        .save-button {
+            background-color: var(--color-primary);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            flex-shrink: 0;
+        }
+        .save-button:hover {
+            background-color: #1558b3;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        body.dark-mode .save-button {
+            background-color: var(--color-primary);
+            color: var(--color-text-main);
+        }
+        body.dark-mode .save-button:hover {
+            background-color: #6f9bd8;
+        }
+
+
+        /* --- Custom Alert/Confirm Modal --- */
+        #customAlertConfirmModal .modal-content {
+            text-align: center;
+            border-top: 4px solid var(--color-primary);
+            max-width: 400px;
+        }
+        #customAlertConfirmModal .modal-content p {
+            font-size: 1.1em;
+            margin-bottom: 25px;
+            color: var(--color-text-main);
+        }
+        #customAlertConfirmModal .modal-content button {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+        #customAlertConfirmModal .modal-content button:first-child {
+            margin-right: 10px;
+        }
+        #customAlertConfirmModal #customModalConfirmBtn {
+            background-color: var(--color-primary);
+            color: white;
+        }
+        #customAlertConfirmModal #customModalConfirmBtn:hover {
+            background-color: #1558b3;
+        }
+        body.dark-mode #customAlertConfirmModal #customModalConfirmBtn {
+            background-color: var(--color-primary);
+            color: var(--color-text-main);
+        }
+        body.dark-mode #customAlertConfirmModal #customModalConfirmBtn:hover {
+            background-color: #6f9bd8;
+        }
+        #customAlertConfirmModal #customModalCancelBtn {
+            background-color: var(--google-gray-200);
+            color: var(--color-text-main);
+        }
+        #customAlertConfirmModal #customModalCancelBtn:hover {
+            background-color: var(--google-gray-300);
+        }
+        body.dark-mode #customAlertConfirmModal #customModalCancelBtn {
+            background-color: #3C4043;
+            color: var(--color-text-main);
+        }
+        body.dark-mode #customAlertConfirmModal #customModalCancelBtn:hover {
+            background-color: #5f6368;
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 1024px) {
+            .app-container {
+                flex-direction: column;
+                height: auto;
+            }
+            .left-sidebar {
+                width: 100%;
+                padding: 15px;
+                border-right: none;
+                border-bottom: 1px solid var(--color-border-default);
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+            }
+            .create-button {
+                max-width: 100%;
+                margin-bottom: 0;
+                order: -1;
+            }
+            .mini-calendar {
+                border-bottom: none;
+                padding-bottom: 0;
+                margin-bottom: 0;
+            }
+            .sidebar-options-section {
+                margin-top: 0;
+                padding-top: 0;
+                border-top: none;
+                width: 100%;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .sidebar-options-section select,
+            .sidebar-options-section button {
+                flex-grow: 1;
+                max-width: unset;
+            }
+            .main-content {
+                padding: 15px;
+            }
+            .main-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .main-header .title-nav-group {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .view-mode-buttons {
+                width: 100%;
+                display: flex;
+                justify-content: space-around;
+            }
+            .view-mode-buttons button {
+                flex-grow: 1;
+            }
+            .day-cell {
+                min-height: 120px;
+                padding: 8px;
+            }
+            .day-image {
+                height: 60px;
+            }
+            .main-calendar-grid {
+                height: calc(100vh - 250px);
+            }
+            .weekdays-header {
+                grid-template-columns: repeat(7, minmax(120px, 1fr)); /* Adjust columns for smaller screens */
+            }
+            .main-calendar-grid {
+                grid-template-columns: repeat(7, minmax(120px, 1fr)); /* Adjust columns for smaller screens */
+            }
+        }
+
+        @media (max-width: 768px) {
+            .current-display-date {
+                font-size: 1.5em;
+            }
+            .day-cell {
+                min-height: 100px;
+                padding: 6px;
+            }
+            .day-number {
+                font-size: 1em;
+            }
+            .day-event-text {
+                font-size: 0.8em;
+                padding: 4px 6px;
+            }
+            .modal-content {
+                padding: 18px;
+            }
+            .modal-content h3 {
+                font-size: 1.5em;
+            }
+            .tag-input-group {
+                flex-direction: column;
+            }
+            .tag-input-group button {
+                width: 100%;
+            }
+            .save-button {
+                font-size: 1em;
+                padding: 10px 15px;
+            }
+            .weekdays-header {
+                grid-template-columns: repeat(7, minmax(100px, 1fr));
+            }
+            .main-calendar-grid {
+                grid-template-columns: repeat(7, minmax(100px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 10px;
+            }
+            .main-header .title-nav-group {
+                flex-wrap: wrap;
+            }
+            .main-header .nav-buttons {
+                order: -1;
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+            }
+            .current-display-date {
+                font-size: 1.2em;
+                width: 100%;
+                text-align: center;
+            }
+            .view-mode-buttons button {
+                padding: 6px 10px;
+                font-size: 0.85em;
+            }
+            .day-cell {
+                min-height: 80px;
+                padding: 4px;
+            }
+            .day-event-text {
+                font-size: 0.7em;
+            }
+            .modal-content {
+                padding: 12px;
+            }
+            .modal-content h3 {
+                font-size: 1.3em;
+            }
+            .weekdays-header {
+                grid-template-columns: repeat(7, minmax(80px, 1fr));
+            }
+            .main-calendar-grid {
+                grid-template-columns: repeat(7, minmax(80px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="left-sidebar">
+            <button id="createEventBtn" class="create-button">
+                + Crear
+            </button>
+
+            <div id="miniCalendar" class="mini-calendar">
+                <div class="mini-calendar-header">
+                    <button id="miniPrevMonthBtn" class="mini-calendar-nav">‹</button>
+                    <h4 id="miniCurrentMonthYear"></h4>
+                    <button id="miniNextMonthBtn" class="mini-calendar-nav">›</button>
+                </div>
+                <div class="mini-calendar-grid">
+                    <div class="day-name">D</div>
+                    <div class="day-name">L</div>
+                    <div class="day-name">M</div>
+                    <div class="day-name">X</div>
+                    <div class="day-name">J</div>
+                    <div class="day-name">V</div>
+                    <div class="day-name">S</div>
+                    <!-- Mini calendar days will be rendered here -->
+                </div>
+            </div>
+
+            <!-- Global Options (Theme Selector, Dark Mode Toggle) -->
+            <div class="sidebar-options-section">
+                <label for="themeSelector">Tema de la Aplicación:</label>
+                <select id="themeSelector">
+                    <option value="original">Tema Original</option>
+                    <option value="blue">Tema Azul</option>
+                    <option value="green">Tema Verde</option>
+                </select>
+                <button id="darkModeToggleBtn">🌙 Modo Oscuro</button>
+                <button id="resetDatesBtn">🗑️ Resetear Fechas</button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="main-header">
+                <div class="title-nav-group">
+                    <div class="nav-buttons">
+                        <button id="prevBtn">‹</button>
+                        <button id="nextBtn">›</button>
+                    </div>
+                    <h2 id="currentDisplayDate" class="current-display-date"></h2>
+                </div>
+                <div class="view-mode-buttons">
+                    <button id="monthViewBtn" class="active">Mes</button>
+                    <button id="weekViewBtn">Semana</button>
+                </div>
+            </header>
+
+            <div class="weekdays-header" id="weekdaysHeader">
+                <div>Dom</div>
+                <div>Lun</div>
+                <div>Mar</div>
+                <div>Mié</div>
+                <div>Jue</div>
+                <div>Vie</div>
+                <div>Sáb</div>
+            </div>
+
+            <div class="main-calendar-grid" id="daysGrid">
+                <!-- Main calendar days will be rendered here by JavaScript -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Event Detail/Creation Modal -->
+    <div id="eventModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal()">&times;</span>
+            <h3 id="modalTitle">Detalles del Día <span id="modalEmoji">📅</span></h3>
+            <p class="sub-title">Día Seleccionado: <span id="selectedDateText"></span></p>
+
+            <label for="eventText">📝 Tarea/Contenido a programar:</label>
+            <textarea id="eventText" placeholder="Ej: Grabar Vlog Semanal (Gaming), Editar Video de Unboxing, Sesión de Brainstorming para nuevos temas."></textarea>
+
+            <label for="imageUpload">📸 Imagen para el día (Miniatura/Referencia):</label>
+            <input type="file" id="imageUpload" accept="image/*">
+            <div id="currentImagePreview" style="margin-top: 10px; display: none;">
+                <p>Imagen actual:</p>
+                <img id="previewImg" src="" alt="Previsualización" style="max-width: 100%; height: auto; border-radius: 8px;">
+                <button onclick="removeImage()">🗑️ Quitar Imagen</button>
+            </div>
+
+            <label>🎨 Color de Marca para el Día:</label>
+            <div class="color-palette">
+                <div class="color-option" style="background-color: transparent;" data-color="transparent" title="Sin color"></div>
+                <div class="color-option" style="background-color: #FF6B6B;" data-color="#FF6B6B" title="🔴 Publicación"></div>
+                <div class="color-option" style="background-color: #4ECDC4;" data-color="#4ECDC4" title="🟢 Edición"></div>
+                <div class="color-option" style="background-color: #FFD166;" data-color="#FFD166" title="🟡 Grabación"></div>
+                <div class="color-option" style="background-color: #1ABC9C;" data-color="#1ABC9C" title="💡 Idea/Guion"></div>
+                <div class="color-option" style="background-color: #9B59B6;" data-color="#9B59B6" title="🟣 Colaboración"></div>
+                <div class="color-option" style="background-color: #3498DB;" data-color="#3498DB" title="🔵 Promoción"></div>
+                <input type="color" id="customColorPicker" title="🌈 Elegir color personalizado">
+            </div>
+
+            <!-- Tag Management Section -->
+            <div class="tag-management-section">
+                <h4>Gestionar Mis Tags</h4>
+                <div class="tag-input-group">
+                    <input type="text" id="newTagInput" placeholder="Añadir nuevo tag (ej. Vlog, SEO)" maxlength="20">
+                    <button id="addTagBtn">Añadir Tag</button>
+                </div>
+                <div class="existing-tags-list" id="existingTagsList">
+                    <!-- Tags will be rendered here -->
+                </div>
+            </div>
+
+            <!-- Day Tags Selection Section -->
+            <div class="day-tags-selection">
+                <h4>Tags para este Día:</h4>
+                <div class="tag-checkbox-group" id="dayTagsSelection">
+                    <!-- Checkboxes for tags will be rendered here -->
+                </div>
+            </div>
+
+            <button class="save-button" onclick="saveDayDetails()">✅ Guardar Cambios</button>
+        </div>
+    </div>
+
+    <!-- Custom Confirmation/Alert Modal -->
+    <div id="customAlertConfirmModal" class="modal">
+        <div class="modal-content">
+            <p id="customModalMessage"></p>
+            <div style="display: flex; justify-content: center; gap: 10px;">
+                <button id="customModalConfirmBtn">Aceptar</button>
+                <button id="customModalCancelBtn">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- DOM Elements ---
+        const currentDisplayDate = document.getElementById('currentDisplayDate');
+        const daysGrid = document.getElementById('daysGrid');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const eventModal = document.getElementById('eventModal');
+        const selectedDateText = document.getElementById('selectedDateText');
+        const resetDatesBtn = document.getElementById('resetDatesBtn');
+        const themeSelector = document.getElementById('themeSelector');
+        const darkModeToggleBtn = document.getElementById('darkModeToggleBtn');
+        const monthViewBtn = document.getElementById('monthViewBtn');
+        const weekViewBtn = document.getElementById('weekViewBtn');
+        const weekdaysHeader = document.getElementById('weekdaysHeader');
+
+        // Mini Calendar elements
+        const miniCalendar = document.getElementById('miniCalendar');
+        const miniPrevMonthBtn = document.getElementById('miniPrevMonthBtn');
+        const miniNextMonthBtn = document.getElementById('miniNextMonthBtn');
+        const miniCurrentMonthYear = document.getElementById('miniCurrentMonthYear');
+        const miniCalendarGrid = document.querySelector('.mini-calendar-grid');
+        const createEventBtn = document.getElementById('createEventBtn');
+
+        // Modal Specific Elements (Simplified for one event per day)
+        const eventTextarea = document.getElementById('eventText');
+        const imageUploadInput = document.getElementById('imageUpload');
+        const currentImagePreview = document.getElementById('currentImagePreview');
+        const previewImg = document.getElementById('previewImg');
+        const colorPalette = document.querySelector('.color-palette');
+        const customColorPicker = document.getElementById('customColorPicker');
+
+        // Tag related elements
+        const newTagInput = document.getElementById('newTagInput');
+        const addTagBtn = document.getElementById('addTagBtn');
+        const existingTagsList = document.getElementById('existingTagsList');
+        const dayTagsSelection = document.getElementById('dayTagsSelection');
+
+        // Custom Modal elements
+        const customAlertConfirmModal = document.getElementById('customAlertConfirmModal');
+        const customModalMessage = document.getElementById('customModalMessage');
+        const customModalConfirmBtn = document.getElementById('customModalConfirmBtn');
+        const customModalCancelBtn = document.getElementById('customModalCancelBtn');
+
+
+        // --- Global State ---
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+        let currentMiniMonth = new Date().getMonth(); // For mini calendar
+        let currentMiniYear = new Date().getFullYear(); // For mini calendar
+        let currentWeekStartDate = getStartOfWeek(new Date());
+        let selectedDayCell = null; // Stores the DOM element of the currently clicked day cell
+
+        // calendarData structure: { 'YYYY-MM-DD': { event: 'string', image: 'base64url', color: '#hex', tags: ['tag1', 'tag2'] } }
+        const calendarData = JSON.parse(localStorage.getItem('creatorCalendarData')) || {};
+        let allTags = JSON.parse(localStorage.getItem('creatorTags')) || [];
+        allTags = Array.from(new Set(allTags));
+
+        let currentActiveTheme = localStorage.getItem('activeTheme') || 'original';
+        let currentDarkModeStatus = localStorage.getItem('darkModeStatus') === 'true';
+        let viewMode = localStorage.getItem('viewMode') || 'month';
+
+
+        const monthNames = [
+            "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+            "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+        ];
+
+        // --- Utility Functions ---
+
+        function formatDate(date) {
+            const d = new Date(date);
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function parseDateString(dateString) {
+            const [year, month, day] = dateString.split('-').map(Number);
+            return new Date(year, month - 1, day);
+        }
+
+        function getStartOfWeek(date) {
+            const d = new Date(date);
+            const day = d.getDay();
+            const diff = d.getDate() - day;
+            return new Date(d.getFullYear(), d.getMonth(), diff);
+        }
+
+        function readFileAsBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function hexToRgb(hex) {
+            const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+            hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+                return r + r + g + g + b + b;
+            }
+            );
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? `${parseInt(result[1], 16)},${parseInt(result[2], 16)},${parseInt(result[3], 16)}` : null;
+        }
+
+        // --- Custom Confirmation/Alert Modal ---
+        let customModalCallbacks = { onConfirm: null, onCancel: null };
+
+        function showCustomModal(message, type = 'alert', onConfirm = () => {}, onCancel = () => {}) {
+            customModalMessage.textContent = message;
+            customModalCallbacks.onConfirm = onConfirm;
+            customModalCallbacks.onCancel = onCancel;
+
+            if (type === 'alert') {
+                customModalConfirmBtn.textContent = 'Aceptar';
+                customModalCancelBtn.style.display = 'none';
+            } else { // 'confirm'
+                customModalConfirmBtn.textContent = 'Sí';
+                customModalCancelBtn.textContent = 'No';
+                customModalCancelBtn.style.display = 'inline-block';
+            }
+            customAlertConfirmModal.style.display = 'flex';
+        }
+
+        customModalConfirmBtn.onclick = () => {
+            customAlertConfirmModal.style.display = 'none';
+            customModalCallbacks.onConfirm();
+        };
+
+        customModalCancelBtn.onclick = () => {
+            customAlertConfirmModal.style.display = 'none';
+            customModalCallbacks.onCancel();
+        };
+
+
+        // --- Calendar Rendering Functions (Main Calendar) ---
+        function renderCalendar() {
+            daysGrid.innerHTML = '';
+            
+            monthViewBtn.classList.toggle('active', viewMode === 'month');
+            weekViewBtn.classList.toggle('active', viewMode === 'week');
+
+            if (viewMode === 'month') {
+                renderMonthView();
+            } else {
+                renderWeekView();
+            }
+            renderMiniCalendar(); // Always re-render mini calendar to reflect main view changes
+        }
+
+        function renderMonthView() {
+            weekdaysHeader.style.display = 'grid';
+            weekdaysHeader.style.gridTemplateColumns = 'repeat(7, minmax(150px, 1fr))'; // Match main grid columns
+
+            currentDisplayDate.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+
+            const today = new Date();
+            const todayDateString = formatDate(today);
+
+            const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            const daysInPrevMonth = new Date(currentYear, currentMonth, 0).getDate();
+
+            // Add empty cells for preceding days of the week (from previous month)
+            for (let i = 0; i < firstDayOfMonth; i++) {
+                const date = new Date(currentYear, currentMonth -1, daysInPrevMonth - firstDayOfMonth + i + 1);
+                const dateString = formatDate(date);
+                addDayCell(date, dateString, todayDateString, true); // true for other-month
+            }
+
+            // Add days of the current month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(currentYear, currentMonth, day);
+                const dateString = formatDate(date);
+                addDayCell(date, dateString, todayDateString);
+            }
+
+            // Add empty cells for trailing days of the week (from next month)
+            const totalCellsRendered = daysGrid.children.length; // Count cells already added
+            const remainingCellsToAdd = 42 - totalCellsRendered; // Fill up to 6 weeks (42 cells)
+
+            if (remainingCellsToAdd > 0) {
+                for (let i = 1; i <= remainingCellsToAdd; i++) {
+                    const date = new Date(currentYear, currentMonth + 1, i);
+                    const dateString = formatDate(date);
+                    addDayCell(date, dateString, todayDateString, true); // true for other-month
+                }
+            }
+        }
+
+        function renderWeekView() {
+            weekdaysHeader.style.display = 'grid';
+            weekdaysHeader.style.gridTemplateColumns = 'repeat(7, minmax(150px, 1fr))'; // Match main grid columns
+
+            const today = new Date();
+            const todayDateString = formatDate(today);
+
+            const weekDates = [];
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(currentWeekStartDate);
+                date.setDate(currentWeekStartDate.getDate() + i);
+                weekDates.push(date);
+            }
+
+            const startDay = weekDates[0].getDate();
+            const startMonth = monthNames[weekDates[0].getMonth()];
+            const endDay = weekDates[6].getDate();
+            const endMonth = monthNames[weekDates[6].getMonth()];
+            const year = weekDates[0].getFullYear();
+
+            currentDisplayDate.textContent = `${startDay} ${startMonth} - ${endDay} ${endMonth} ${year}`;
+
+            weekDates.forEach(date => {
+                const dateString = formatDate(date);
+                addDayCell(date, dateString, todayDateString);
+            });
+        }
+
+        /**
+         * Creates and appends a single day cell to the grid.
+         * @param {Date} dateObj - The Date object for the cell.
+         * @param {string} dateString - The 'YYYY-MM-DD' string for the date.
+         * @param {string} todayDateString - The 'YYYY-MM-DD' string for today's date.
+         * @param {boolean} isOtherMonth - True if this cell belongs to a different month (for styling).
+         */
+        function addDayCell(dateObj, dateString, todayDateString, isOtherMonth = false) {
+            const dayCell = document.createElement('div');
+            dayCell.classList.add('day-cell');
+            dayCell.dataset.date = dateString;
+
+            if (isOtherMonth) {
+                dayCell.classList.add('empty-day'); /* Use original class for other month cells */
+            }
+
+            if (dateString === todayDateString) {
+                dayCell.classList.add('today');
+            }
+
+            const dayNumberWrapper = document.createElement('div');
+            dayNumberWrapper.classList.add('day-number-wrapper');
+            const dayNumber = document.createElement('span');
+            dayNumber.classList.add('day-number');
+            dayNumber.textContent = dateObj.getDate();
+            dayNumberWrapper.appendChild(dayNumber);
+            dayCell.appendChild(dayNumberWrapper);
+
+            const dayContentWrapper = document.createElement('div');
+            dayContentWrapper.classList.add('day-content-wrapper');
+            dayCell.appendChild(dayContentWrapper);
+
+            const savedData = calendarData[dateString];
+            if (savedData) {
+                if (savedData.image) {
+                    const img = document.createElement('img');
+                    img.classList.add('day-image');
+                    img.src = savedData.image;
+                    dayContentWrapper.appendChild(img);
+                }
+                if (savedData.event) {
+                    const eventDiv = document.createElement('div');
+                    eventDiv.classList.add('day-event-text');
+                    eventDiv.innerHTML = `<span>${savedData.event}</span>`;
+                    dayContentWrapper.appendChild(eventDiv);
+                }
+                if (savedData.color && savedData.color !== 'transparent') {
+                    dayCell.style.setProperty('--data-color-value', savedData.color);
+                    dayCell.dataset.color = savedData.color;
+                } else {
+                    dayCell.style.removeProperty('--data-color-value');
+                    delete dayCell.dataset.color;
+                }
+                
+                // Display tags on the day cell
+                if (savedData.tags && savedData.tags.length > 0) {
+                    const tagsDiv = document.createElement('div');
+                    tagsDiv.classList.add('day-cell-tags');
+                    savedData.tags.forEach(tag => {
+                        const tagPill = document.createElement('span');
+                        tagPill.classList.add('day-cell-tag-pill');
+                        tagPill.textContent = tag;
+                        tagsDiv.appendChild(tagPill);
+                    });
+                    dayContentWrapper.appendChild(tagsDiv);
+                }
+
+                dayCell.draggable = true;
+            } else {
+                dayCell.draggable = false;
+            }
+
+            dayCell.addEventListener('click', () => openModal(dayCell));
+            dayCell.addEventListener('dragstart', dragStart);
+            dayCell.addEventListener('dragover', dragOver);
+            dayCell.addEventListener('dragleave', dragLeave);
+            dayCell.addEventListener('drop', drop);
+
+            daysGrid.appendChild(dayCell);
+        }
+
+        // --- Mini Calendar Functions ---
+        function renderMiniCalendar() {
+            miniCalendarGrid.innerHTML = `
+                <div class="day-name">D</div>
+                <div class="day-name">L</div>
+                <div class="day-name">M</div>
+                <div class="day-name">X</div>
+                <div class="day-name">J</div>
+                <div class="day-name">V</div>
+                <div class="day-name">S</div>
+            `; // Clear and re-add day names
+
+            miniCurrentMonthYear.textContent = `${monthNames[currentMiniMonth]} ${currentMiniYear}`;
+
+            const today = new Date();
+            const todayDateString = formatDate(today);
+
+            const firstDayOfMonth = new Date(currentMiniYear, currentMiniMonth, 1).getDay();
+            const daysInMonth = new Date(currentMiniYear, currentMiniMonth + 1, 0).getDate();
+            const daysInPrevMonth = new Date(currentMiniYear, currentMiniMonth, 0).getDate();
+
+            // Add leading empty cells (days from previous month)
+            for (let i = 0; i < firstDayOfMonth; i++) {
+                const cell = document.createElement('div');
+                cell.classList.add('mini-day-cell', 'other-month');
+                cell.textContent = daysInPrevMonth - firstDayOfMonth + i + 1;
+                miniCalendarGrid.appendChild(cell);
+            }
+
+            // Add current month days
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(currentMiniYear, currentMiniMonth, day);
+                const dateString = formatDate(date);
+
+                const cell = document.createElement('div');
+                cell.classList.add('mini-day-cell');
+                cell.textContent = day;
+                cell.dataset.date = dateString; // Store full date string
+
+                // Highlight today or the currently displayed day in main calendar
+                if (dateString === todayDateString) {
+                    cell.classList.add('today'); // Class for actual today
+                }
+                const mainCalendarFocusDate = viewMode === 'month' ? formatDate(new Date(currentYear, currentMonth, 1)) : formatDate(currentWeekStartDate);
+                if (dateString === mainCalendarFocusDate) {
+                     cell.classList.add('selected-day'); // Highlight the day representing the main calendar's current view
+                }
+
+
+                cell.addEventListener('click', () => {
+                    // Update main calendar view to this date
+                    if (viewMode === 'month') {
+                        currentMonth = date.getMonth();
+                        currentYear = date.getFullYear();
+                    } else { // week view
+                        currentWeekStartDate = getStartOfWeek(date);
+                    }
+                    renderCalendar();
+                });
+                miniCalendarGrid.appendChild(cell);
+            }
+
+            // Add trailing empty cells (days from next month)
+            const totalCells = firstDayOfMonth + daysInMonth;
+            const remainingCells = 42 - totalCells; // Max 6 weeks * 7 days = 42 cells
+
+            for (let i = 1; i <= remainingCells; i++) {
+                const cell = document.createElement('div');
+                cell.classList.add('mini-day-cell', 'other-month');
+                cell.textContent = i;
+                miniCalendarGrid.appendChild(cell);
+            }
+        }
+
+
+        // --- Drag & Drop Functions (for entire day content) ---
+        let draggedDateString = null;
+
+        function dragStart(e) {
+            if (e.target.classList.contains('day-cell') && e.target.draggable) {
+                draggedDateString = e.target.dataset.date;
+                e.dataTransfer.setData('text/plain', draggedDateString);
+                e.dataTransfer.effectAllowed = 'move';
+                e.target.classList.add('dragging');
+            }
+        }
+
+        function dragOver(e) {
+            e.preventDefault();
+            const targetCell = e.target.closest('.day-cell');
+            if (targetCell) {
+                if (targetCell.dataset.date !== draggedDateString && !targetCell.classList.contains('empty-day')) { /* Prevent dropping on other-month empty cells */
+                    targetCell.classList.add('droppable');
+                }
+            }
+        }
+
+        function dragLeave(e) {
+            const targetCell = e.target.closest('.day-cell');
+            if (targetCell) {
+                targetCell.classList.remove('droppable');
+            }
+        }
+
+        function drop(e) {
+            e.preventDefault();
+            const targetCell = e.target.closest('.day-cell');
+
+            if (!targetCell || !draggedDateString || targetCell.dataset.date === draggedDateString || targetCell.classList.contains('empty-day')) {
+                if (targetCell) targetCell.classList.remove('droppable');
+                if (document.querySelector('.day-cell.dragging')) {
+                    document.querySelector('.day-cell.dragging').classList.remove('dragging');
+                }
+                draggedDateString = null;
+                return;
+            }
+
+            const sourceDate = draggedDateString;
+            const targetDate = targetCell.dataset.date;
+
+            // Handle potential collision
+            if (calendarData[targetDate]) {
+                showCustomModal(
+                    `El día ${targetDate} ya tiene contenido. ¿Deseas reemplazarlo con el contenido del ${sourceDate}?`,
+                    'confirm',
+                    () => { // On confirm
+                        calendarData[targetDate] = { ...calendarData[sourceDate] }; // Copy all data
+                        delete calendarData[sourceDate]; // Remove from source
+                        localStorage.setItem('creatorCalendarData', JSON.stringify(calendarData));
+                        renderCalendar();
+                        showCustomModal('Contenido movido con éxito.', 'alert');
+                    },
+                    () => { // On cancel
+                        // Do nothing
+                    }
+                );
+            } else {
+                // No collision, just move
+                calendarData[targetDate] = { ...calendarData[sourceDate] };
+                delete calendarData[sourceDate];
+                localStorage.setItem('creatorCalendarData', JSON.stringify(calendarData));
+                renderCalendar();
+                showCustomModal('Contenido movido con éxito.', 'alert');
+            }
+            
+            if (targetCell) targetCell.classList.remove('droppable');
+            if (document.querySelector('.day-cell.dragging')) {
+                document.querySelector('.day-cell.dragging').classList.remove('dragging');
+            }
+            draggedDateString = null;
+        }
+
+
+        // --- Modal Functions (for single event per day) ---
+
+        function openModal(dayCell) {
+            selectedDayCell = dayCell;
+            const dateString = dayCell.dataset.date;
+            const savedData = calendarData[dateString] || { event: '', image: '', color: 'transparent', tags: [] };
+
+            const dateObj = parseDateString(dateString);
+            selectedDateText.textContent = `${dateObj.getDate()} de ${monthNames[dateObj.getMonth()]} de ${dateObj.getFullYear()}`;
+            eventTextarea.value = savedData.event;
+
+            if (savedData.image) {
+                previewImg.src = savedData.image;
+                currentImagePreview.style.display = 'block';
+            } else {
+                previewImg.src = '';
+                currentImagePreview.style.display = 'none';
+            }
+            imageUploadInput.value = ''; // Always clear file input for security/re-upload
+
+            // Reset all color options and select the correct one
+            document.querySelectorAll('.color-palette .color-option').forEach(option => {
+                option.classList.remove('selected');
+                if (option.dataset.color === savedData.color) {
+                    option.classList.add('selected');
+                }
+            });
+            // If the saved color is custom and not in presets, set custom picker
+            if (!document.querySelector(`.color-palette .color-option[data-color="${savedData.color}"]`) && savedData.color !== 'transparent') {
+                customColorPicker.value = savedData.color;
+            } else {
+                customColorPicker.value = '#000000'; // Reset custom picker if a preset or transparent is selected
+            }
+
+            renderTagManagement(); // Show existing tags
+            renderDayTagSelection(savedData.tags); // Show checkboxes for this day's tags
+
+            eventModal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            eventModal.style.display = 'none';
+            selectedDayCell = null;
+            eventTextarea.value = '';
+            imageUploadInput.value = '';
+            previewImg.src = '';
+            currentImagePreview.style.display = 'none';
+            document.querySelectorAll('.color-palette .color-option').forEach(option => option.classList.remove('selected'));
+            document.querySelector('.color-palette .color-option[data-color="transparent"]').classList.add('selected'); // Default back to transparent
+            customColorPicker.value = '#000000';
+            newTagInput.value = '';
+            dayTagsSelection.innerHTML = '';
+        }
+
+        async function saveDayDetails() {
+            if (!selectedDayCell) return;
+
+            const dateString = selectedDayCell.dataset.date;
+            const eventContent = eventTextarea.value.trim();
+            let imageBase64 = calendarData[dateString]?.image || ''; // Keep existing image if not new upload
+            let selectedColor = document.querySelector('.color-palette .color-option.selected')?.dataset.color;
+            const selectedTags = Array.from(dayTagsSelection.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+
+            if (!selectedColor || selectedColor === 'transparent') {
+                if (customColorPicker.value && customColorPicker.value !== '#000000') {
+                    selectedColor = customColorPicker.value;
+                } else {
+                    selectedColor = 'transparent';
+                }
+            }
+
+            if (imageUploadInput.files.length > 0) {
+                const file = imageUploadInput.files[0];
+                if (file) {
+                    try {
+                        imageBase64 = await readFileAsBase64(file);
+                    } catch (error) {
+                        showCustomModal("Error al cargar la imagen: " + error.message, 'alert');
+                        return;
+                    }
+                }
+            }
+
+            // Only save if there's *any* content for the day
+            if (eventContent || imageBase64 || (selectedColor && selectedColor !== 'transparent') || selectedTags.length > 0) {
+                calendarData[dateString] = {
+                    event: eventContent,
+                    image: imageBase64,
+                    color: selectedColor,
+                    tags: selectedTags
+                };
+            } else {
+                delete calendarData[dateString]; // If all fields are empty, remove data for the day
+            }
+
+            localStorage.setItem('creatorCalendarData', JSON.stringify(calendarData));
+            renderCalendar(); // Re-render main calendar to reflect changes
+            showCustomModal('Cambios guardados con éxito!', 'alert', () => {
+                closeModal(); // Close modal after successful save and alert
+            });
+        }
+
+        function removeImage() {
+            if (selectedDayCell) {
+                const dateString = selectedDayCell.dataset.date;
+                if (calendarData[dateString]) {
+                    calendarData[dateString].image = '';
+                }
+                previewImg.src = '';
+                currentImagePreview.style.display = 'none';
+                imageUploadInput.value = '';
+            }
+        }
+
+
+        // --- Tag Management Functions ---
+        function renderTagManagement() {
+            existingTagsList.innerHTML = '';
+            allTags.forEach(tag => {
+                const tagPill = document.createElement('span');
+                tagPill.classList.add('tag-pill');
+                tagPill.textContent = tag;
+                const deleteBtn = document.createElement('button');
+                deleteBtn.classList.add('delete-tag');
+                deleteBtn.textContent = 'x';
+                deleteBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    deleteTag(tag);
+                };
+                tagPill.appendChild(deleteBtn);
+                existingTagsList.appendChild(tagPill);
+            });
+        }
+
+        function addTag() {
+            const newTag = newTagInput.value.trim();
+            if (newTag && !allTags.includes(newTag)) {
+                allTags.push(newTag);
+                localStorage.setItem('creatorTags', JSON.stringify(allTags));
+                newTagInput.value = '';
+                renderTagManagement();
+                renderDayTagSelection(getCurrentlySelectedDayTags());
+            } else if (newTag.length > 0) {
+                showCustomModal(`El tag "${newTag}" ya existe.`, 'alert');
+            }
+        }
+
+        function deleteTag(tagToDelete) {
+            showCustomModal(
+                `¿Estás seguro de que quieres eliminar el tag "${tagToDelete}"? Se eliminará de todas las fechas.`,
+                'confirm',
+                () => {
+                    allTags = allTags.filter(tag => tag !== tagToDelete);
+                    localStorage.setItem('creatorTags', JSON.stringify(allTags));
+
+                    for (const dateString in calendarData) {
+                        if (calendarData.hasOwnProperty(dateString) && calendarData[dateString].tags) {
+                            calendarData[dateString].tags = calendarData[dateString].tags.filter(tag => tag !== tagToDelete);
+                        }
+                    }
+                    localStorage.setItem('creatorCalendarData', JSON.stringify(calendarData));
+
+                    renderTagManagement();
+                    renderDayTagSelection(getCurrentlySelectedDayTags());
+                    renderCalendar();
+                }
+            );
+        }
+
+        function renderDayTagSelection(selectedTagsForDay) {
+            dayTagsSelection.innerHTML = '';
+            allTags.forEach(tag => {
+                const label = document.createElement('label');
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.value = tag;
+                checkbox.checked = selectedTagsForDay.includes(tag);
+                
+                label.appendChild(checkbox);
+                label.appendChild(document.createTextNode(tag));
+                dayTagsSelection.appendChild(label);
+            });
+        }
+
+        function getCurrentlySelectedDayTags() {
+            if (selectedDayCell) {
+                const dateString = selectedDayCell.dataset.date;
+                return calendarData[dateString]?.tags || [];
+            }
+            return [];
+        }
+
+
+        // --- Theme Functions ---
+        function applyTheme() {
+            // Remove all specific theme classes first
+            document.body.classList.remove('blue-theme', 'green-theme', 'dark-mode');
+
+            const root = document.documentElement;
+            // Set default (original light mode) based on original file's root vars
+            root.style.setProperty('--color-primary', '#FF6B6B');
+            root.style.setProperty('--color-secondary', '#4ECDC4');
+            root.style.setProperty('--color-accent', '#FFD166');
+            root.style.setProperty('--color-text-dark', '#333');
+            root.style.setProperty('--color-text-light', '#f9f9f9');
+            root.style.setProperty('--color-bg-light', '#f5f7fa');
+            root.style.setProperty('--color-bg-dark', '#2c3e50');
+            root.style.setProperty('--color-card-bg', '#ffffff');
+            root.style.setProperty('--color-border', '#e0e0e0');
+            root.style.setProperty('--color-shadow', 'rgba(0, 0, 0, 0.1)');
+            root.style.setProperty('--color-primary-rgb', '255, 107, 107'); // RGB for #FF6B6B
+
+            // Reset Google-style specific variables to their light defaults
+            root.style.setProperty('--google-blue-500', '#1a73e8');
+            root.style.setProperty('--google-blue-100', '#e8f0fe');
+            root.style.setProperty('--google-gray-200', '#f1f3f4');
+            root.style.setProperty('--google-gray-300', '#dadce0');
+            root.style.setProperty('--google-gray-500', '#70757a');
+            root.style.setProperty('--google-gray-700', '#3c4043');
+            root.style.setProperty('--google-gray-900', '#202124');
+            root.style.setProperty('--color-bg-app', 'var(--google-gray-200)');
+            root.style.setProperty('--color-bg-surface', 'var(--color-white)');
+            root.style.setProperty('--color-border-default', 'var(--google-gray-300)');
+            root.style.setProperty('--color-shadow-light', 'rgba(60, 64, 67, 0.15)');
+            root.style.setProperty('--color-shadow-medium', 'rgba(60, 64, 67, 0.3)');
+
+            // Day number background (light mode default)
+            root.style.setProperty('--day-number-bg-dark', 'rgba(255, 255, 255, 0.8)');
+            root.style.setProperty('--day-number-bg-selected-dark', 'rgba(255, 255, 255, 0.9)');
+
+
+            // Apply specific theme if selected
+            if (currentActiveTheme === 'blue') {
+                document.body.classList.add('blue-theme');
+                root.style.setProperty('--color-primary', '#3498DB');
+                root.style.setProperty('--color-secondary', '#5DADE2');
+                root.style.setProperty('--color-accent', '#A9CCE3');
+                root.style.setProperty('--color-text-dark', '#2C3E50');
+                root.style.setProperty('--color-text-light', '#F8F9FA');
+                root.style.setProperty('--color-bg-light', '#EBF5FB');
+                root.style.setProperty('--color-bg-dark', '#BDC3C7');
+                root.style.setProperty('--color-card-bg', '#FFFFFF');
+                root.style.setProperty('--color-border', '#D4E6F1');
+                root.style.setProperty('--color-shadow', 'rgba(0, 0, 0, 0.08)');
+                root.style.setProperty('--color-primary-rgb', '52, 152, 219');
+            } else if (currentActiveTheme === 'green') {
+                document.body.classList.add('green-theme');
+                root.style.setProperty('--color-primary', '#2ECC71');
+                root.style.setProperty('--color-secondary', '#58D68D');
+                root.style.setProperty('--color-accent', '#A3E4D7');
+                root.style.setProperty('--color-text-dark', '#196F3D');
+                root.style.setProperty('--color-text-light', '#F8F9FA');
+                root.style.setProperty('--color-bg-light', '#E8F8F5');
+                root.style.setProperty('--color-bg-dark', '#BBEADD');
+                root.style.setProperty('--color-card-bg', '#FFFFFF');
+                root.style.setProperty('--color-border', '#D1F2EB');
+                root.style.setProperty('--color-shadow', 'rgba(0, 0, 0, 0.08)');
+                root.style.setProperty('--color-primary-rgb', '46, 204, 113');
+            }
+
+            // Apply dark mode overrides if enabled (this will override theme colors)
+            if (currentDarkModeStatus) {
+                document.body.classList.add('dark-mode');
+                darkModeToggleBtn.textContent = '☀️ Modo Claro';
+
+                // Apply general dark mode Google style defaults
+                root.style.setProperty('--google-gray-200', '#292a2d');
+                root.style.setProperty('--google-gray-300', '#3c4043');
+                root.style.setProperty('--google-gray-500', '#9aa0a6');
+                root.style.setProperty('--google-gray-700', '#e8eaed');
+                root.style.setProperty('--color-bg-app', '#202124');
+                root.style.setProperty('--color-bg-surface', '#303134');
+                root.style.setProperty('--color-border-default', '#5f6368');
+                root.style.setProperty('--color-shadow-light', 'rgba(0, 0, 0, 0.3)');
+                root.style.setProperty('--color-shadow-medium', 'rgba(0, 0, 0, 0.5)');
+
+                // Day number background (dark mode specific)
+                root.style.setProperty('--day-number-bg-dark', 'rgba(48, 49, 52, 0.8)');
+                root.style.setProperty('--day-number-bg-selected-dark', 'rgba(48, 49, 52, 0.9)');
+
+                // Apply specific dark mode theme variables
+                if (currentActiveTheme === 'blue') {
+                    root.style.setProperty('--color-primary', '#85C1E9');
+                    root.style.setProperty('--color-secondary', '#5499C7');
+                    root.style.setProperty('--color-accent', '#2874A6');
+                    root.style.setProperty('--color-text-dark', '#EAECEE');
+                    root.style.setProperty('--color-text-light', '#2C3E50');
+                    root.style.setProperty('--color-bg-light', '#212F3D');
+                    root.style.setProperty('--color-bg-dark', '#1C2833');
+                    root.style.setProperty('--color-card-bg', '#2C3E50');
+                    root.style.setProperty('--color-border', '#34495E');
+                    root.style.setProperty('--color-shadow', 'rgba(0, 0, 0, 0.4)');
+                    root.style.setProperty('--color-primary-rgb', '133, 193, 233');
+
+                    root.style.setProperty('--color-bg-app', '#212F3D');
+                    root.style.setProperty('--color-bg-surface', '#2C3E50');
+                    root.style.setProperty('--color-border-default', '#34495E');
+                } else if (currentActiveTheme === 'green') {
+                    root.style.setProperty('--color-primary', '#76D7C4');
+                    root.style.setProperty('--color-secondary', '#45B39D');
+                    root.style.setProperty('--color-accent', '#1E8449');
+                    root.style.setProperty('--color-text-dark', '#EAECEE');
+                    root.style.setProperty('--color-text-light', '#196F3D');
+                    root.style.setProperty('--color-bg-light', '#1A5276');
+                    root.style.setProperty('--color-bg-dark', '#154360');
+                    root.style.setProperty('--color-card-bg', '#1F618D');
+                    root.style.setProperty('--color-border', '#2980B9');
+                    root.style.setProperty('--color-shadow', 'rgba(0, 0, 0, 0.4)');
+                    root.style.setProperty('--color-primary-rgb', '118, 215, 196');
+
+                    root.style.setProperty('--color-bg-app', '#1A5276');
+                    root.style.setProperty('--color-bg-surface', '#1F618D');
+                    root.style.setProperty('--color-border-default', '#2980B9');
+                } else { // Original theme in dark mode
+                    // Original theme dark mode colors already set at the top of dark-mode block
+                }
+            } else {
+                darkModeToggleBtn.textContent = '🌙 Modo Oscuro';
+            }
+
+            localStorage.setItem('activeTheme', currentActiveTheme);
+            localStorage.setItem('darkModeStatus', currentDarkModeStatus);
+            themeSelector.value = currentActiveTheme;
+
+            renderCalendar();
+        }
+
+        // --- Event Listeners ---
+
+        prevBtn.addEventListener('click', () => {
+            if (viewMode === 'month') {
+                currentMonth--;
+                if (currentMonth < 0) {
+                    currentMonth = 11;
+                    currentYear--;
+                }
+            } else {
+                currentWeekStartDate.setDate(currentWeekStartDate.getDate() - 7);
+            }
+            renderCalendar();
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (viewMode === 'month') {
+                currentMonth++;
+                if (currentMonth > 11) {
+                    currentMonth = 0;
+                    currentYear++;
+                }
+            } else {
+                currentWeekStartDate.setDate(currentWeekStartDate.getDate() + 7);
+            }
+            renderCalendar();
+        });
+
+        miniPrevMonthBtn.addEventListener('click', () => {
+            currentMiniMonth--;
+            if (currentMiniMonth < 0) {
+                currentMiniMonth = 11;
+                currentMiniYear--;
+            }
+            renderMiniCalendar();
+        });
+
+        miniNextMonthBtn.addEventListener('click', () => {
+            currentMiniMonth++;
+            if (currentMiniMonth > 11) {
+                currentMiniMonth = 0;
+                currentMiniYear++;
+            }
+            renderMiniCalendar();
+        });
+
+        createEventBtn.addEventListener('click', () => {
+            selectedDayCell = null;
+            const today = new Date();
+            const todayDateString = formatDate(today);
+            const todayCell = document.querySelector(`.day-cell[data-date="${todayDateString}"]`) || { dataset: { date: todayDateString } };
+            openModal(todayCell);
+        });
+
+        colorPalette.addEventListener('click', (event) => {
+            const target = event.target;
+            if (target.classList.contains('color-option')) {
+                document.querySelectorAll('.color-option').forEach(option => option.classList.remove('selected'));
+                target.classList.add('selected');
+                customColorPicker.value = '#000000';
+            }
+        });
+
+        customColorPicker.addEventListener('input', (event) => {
+            document.querySelectorAll('.color-option').forEach(option => option.classList.remove('selected'));
+        });
+
+        resetDatesBtn.addEventListener('click', () => {
+            showCustomModal(
+                '¿Estás seguro de que quieres resetear todas las fechas? Esta acción no se puede deshacer.',
+                'confirm',
+                () => {
+                    localStorage.removeItem('creatorCalendarData');
+                    localStorage.removeItem('creatorTags');
+                    for (const key in calendarData) { delete calendarData[key]; }
+                    allTags = [];
+                    renderCalendar();
+                    showCustomModal('Todas las fechas han sido reseteadas.', 'alert');
+                }
+            );
+        });
+
+        themeSelector.addEventListener('change', (event) => {
+            currentActiveTheme = event.target.value;
+            applyTheme();
+        });
+
+        darkModeToggleBtn.addEventListener('click', () => {
+            currentDarkModeStatus = !currentDarkModeStatus;
+            applyTheme();
+        });
+
+        monthViewBtn.addEventListener('click', () => {
+            if (viewMode !== 'month') {
+                viewMode = 'month';
+                localStorage.setItem('viewMode', viewMode);
+                currentMonth = currentMiniMonth;
+                currentYear = currentMiniYear;
+                renderCalendar();
+            }
+        });
+
+        weekViewBtn.addEventListener('click', () => {
+            if (viewMode !== 'week') {
+                viewMode = 'week';
+                localStorage.setItem('viewMode', viewMode);
+                currentWeekStartDate = getStartOfWeek(new Date(currentYear, currentMonth, 1));
+                renderCalendar();
+            }
+        });
+
+        addTagBtn.addEventListener('click', addTag);
+        newTagInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                addTag();
+            }
+        });
+
+
+        // --- Initial Load ---
+        document.addEventListener('DOMContentLoaded', () => {
+            applyTheme();
+            renderCalendar();
+            renderMiniCalendar();
+        });
+    </script>
+</body>
+</html>
+
